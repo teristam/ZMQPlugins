@@ -70,9 +70,10 @@ After generating the build files, the actual building process depends on your pl
 - Open the `OE_ZME.xcodeproj` and build the `ALL_BUILD` target
 
 ### Binary installation 
-Binary files are provided in the `bin` folder of this repository. The Linux file is compiled in Ubuntu 19 with gcc-8. Windows binary is compiled with Visual Studio 2015.
+Binary files are provided in the `bin` folder of this repository. The Linux file is compiled in Ubuntu 19 with gcc-8. Windows binary is compiled with Visual Studio 2015, MacOS binary is built with Xcode 11.2.1
 
 - Copy the binary file of respective platform (.so for Linux, .dll for Windows) to the `plugins` directory of open-ephys
+- On MacOS, in Finder, right click open-ephys and click 'Show Package Contents', and copy the `ZMQInterface.bundle` to `Contents\PlugIns`
 
  
 
