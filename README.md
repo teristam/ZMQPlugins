@@ -67,7 +67,7 @@ After generating the build files, the actual building process depends on your pl
 
 #### MacOS
 
-- Open the Xcode project and compile
+- Open the `OE_ZME.xcodeproj` and build the `ALL_BUILD` target
 
 ### Binary installation 
 Binary files are provided in the `bin` folder of this repository. The Linux file is compiled in Ubuntu 19 with gcc-8. Windows binary is compiled with Visual Studio 2015.
