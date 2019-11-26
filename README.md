@@ -67,12 +67,17 @@ After generating the build files, the actual building process depends on your pl
 
 #### MacOS
 
-- Open the Xcode project and compile
+- Open the `OE_ZME.xcodeproj` and build the `ALL_BUILD` target
 
 ### Binary installation 
-Binary files are provided in the `bin` folder of this repository. The Linux file is compiled in Ubuntu 19 with gcc-8. Windows binary is compiled with Visual Studio 2015.
+Binary files are provided in the `bin` folder of this repository. The Linux file is compiled in Ubuntu 19 with gcc-8. Windows binary is compiled with Visual Studio 2015, MacOS binary is built with Xcode 11.2.1
+Note: due to the latest change of how open-ephys organize its plugins, you may need to compile the open-ephys GUI from source first to be able to use this plugin.
 
+#### Windows and Linux
 - Copy the binary file of respective platform (.so for Linux, .dll for Windows) to the `plugins` directory of open-ephys
+#### MacOS
+- Copy the .bundle files to `~/Library/Application Support/open-ephys/PlugIns`
+- Note: you need to use the latest open-ephys GUI. The plugin has been tested on 0.4.5
 
  
 
