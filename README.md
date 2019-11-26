@@ -32,7 +32,8 @@ etc...
 Call `cmake` in the `Build` folder with the appropriate generator for your platform:
 
 ```
-cmake -G "<GENERATOR>"
+cmake -G "<GENERATOR>" .. #for Windows and MacOS
+cmake -G "<GENERATOR>" -DCMAKE_BUILD_TYPE=Release .. #for Linux
 ```
 
 <GENERATOR> can be one of the following options:
