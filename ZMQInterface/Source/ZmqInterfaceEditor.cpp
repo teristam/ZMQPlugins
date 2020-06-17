@@ -96,7 +96,7 @@ public:
             const int x = getTickX();
             
             g.setFont (height * 0.6f);
-            if(i->alive)
+            if (i->alive)
                 g.setColour(Colours::green);
             else
                 g.setColour(Colours::red);

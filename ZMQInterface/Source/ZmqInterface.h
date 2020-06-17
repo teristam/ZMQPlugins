@@ -132,7 +132,8 @@ private:
 
     void handleEvent(const EventChannel* eventInfo, const MidiMessage& event, int samplePosition);
     void handleSpike(const SpikeChannel* spikeInfo, const MidiMessage& event, int samplePosition);
-    int sendData(float *data, int nChannels, int nSamples, int nRealSamples, int64 timestamp);
+    int sendData(float *data, int nChannels, int nSamples, int nRealSamples, 
+                 int64 timestamp, int sampleRate);
     int sendEvent( uint8 type,
                   int sampleNum,
                   uint8 eventId,
