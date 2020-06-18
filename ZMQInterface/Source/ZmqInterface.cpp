@@ -218,6 +218,7 @@ void ZmqInterface::run()
         zmq_poll (items, 2, -1);
         if (items[0].revents & ZMQ_POLLIN)
         {
+            //Receive data
             size = zmq_recv(listenSocket, buffer, MAX_MESSAGE_LENGTH-1, 0);
             buffer[size] = 0;
             
@@ -260,6 +261,7 @@ void ZmqInterface::run()
                 ed.isEvent = false;
             }
             
+            // Direct to pipein socket
             // TODO allow for event data
             zmq_msg_t message;
             zmq_msg_init_size(&message, sizeof(EventData));
@@ -406,7 +408,7 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
     if (bufferSize)
     {
         SpikeEventPtr spike = SpikeEvent::deserializeFromMessage(event, spikeInfo);
-
+        
         if (spike)
         {
             DynamicObject::Ptr obj = new DynamicObject();
@@ -421,17 +423,21 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
             uint32_t nSamples = channel->getTotalSamples();
             c_obj->setProperty("n_channels", (int64)nChannels);
             c_obj->setProperty("n_samples", (int64)nSamples);
-    
+            int chan_id = getSpikeChannelIndex(spike);
+            c_obj->setProperty("threshold", spike->getThreshold(chan_id));
+            c_obj->setProperty("electrode_id", chan_id);
+            c_obj->setProperty("sorted_id", spike->getSortedID());
+            c_obj->setProperty("source", spike->getSourceID());    
             // todo
-            c_obj->setProperty("electrode_id", getSpikeChannelIndex(spike));
-#if 0
-            c_obj->setProperty("channel", spike.channel);
-            c_obj->setProperty("source", spike.source);
-            var c_var(spike.color[0]);
+//#if 0
+
+            //c_obj->setProperty("channel", spike.channel);
+            //c_obj->setProperty("source", spike.source);
+        /*    var c_var(spike.color[0]);
             c_var.append(spike.color[1]);
             c_var.append(spike.color[2]);
-            c_obj->setProperty("color", c_var);
-            var p_var(spike.pcProj[0]);
+            c_obj->setProperty("color", c_var);*/
+ /*           var p_var(spike.pcProj[0]);
             p_var.append(spike.pcProj[1]);
             c_obj->setProperty("pc_proj", p_var);
             var g_var(spike.gain[0]);
@@ -441,8 +447,8 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
             var t_var = var(spike.threshold[0]);
             for (int i = 1; i < spike.nChannels; i++)
                 t_var.append(spike.threshold[i]);
-            c_obj->setProperty("threshold", t_var);
-#endif
+            c_obj->setProperty("threshold", t_var);*/
+//#endif
             obj->setProperty("spike", var(c_obj));
             var json (obj);
             String s = JSON::toString(json);
@@ -463,11 +469,14 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
             size = zmq_msg_send(&messageHeader, socket, ZMQ_SNDMORE);
             jassert(size != -1);
             zmq_msg_close(&messageHeader);
+
             zmq_msg_t message;
-            zmq_msg_init_size(&message, nChannels * nSamples);
+            zmq_msg_init_size(&message, sizeof(float) * nChannels * nSamples);
             // getdatapointer???
-            memcpy(zmq_msg_data(&message), spike->getDataPointer(), nChannels * nSamples);
+            memcpy(zmq_msg_data(&message), spike->getDataPointer(), sizeof(float) * nChannels * nSamples);
             size = zmq_msg_send(&message, socket, 0);
+            jassert(size != -1);
+            zmq_msg_close(&messageHeader);
             
         }
     }

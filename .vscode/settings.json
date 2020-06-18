@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Users/teristam/opt/anaconda3/bin/python"
+    "python.pythonPath": "C:\\Users\\teristam\\Anaconda3\\envs\\oeEnv\\python.exe",
+    "cmake.configureOnOpen": false
 }
