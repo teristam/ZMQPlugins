@@ -361,6 +361,8 @@ int ZmqInterface::sendData(float *data, int nChannels, int nSamples, int nRealSa
     c_obj->setProperty("timestamp", timestamp);
     c_obj->setProperty("sample_rate", sampleRate);
 
+    //std::cout << "data timestamp: " << timestamp << std::endl;
+
     obj->setProperty("content", var(c_obj));
     obj->setProperty("data_size", (int)(nChannels * nSamples * sizeof(float)));
     
@@ -428,27 +430,9 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
             c_obj->setProperty("electrode_id", chan_id);
             c_obj->setProperty("sorted_id", spike->getSortedID());
             c_obj->setProperty("source", spike->getSourceID());    
-            // todo
-//#if 0
 
-            //c_obj->setProperty("channel", spike.channel);
-            //c_obj->setProperty("source", spike.source);
-        /*    var c_var(spike.color[0]);
-            c_var.append(spike.color[1]);
-            c_var.append(spike.color[2]);
-            c_obj->setProperty("color", c_var);*/
- /*           var p_var(spike.pcProj[0]);
-            p_var.append(spike.pcProj[1]);
-            c_obj->setProperty("pc_proj", p_var);
-            var g_var(spike.gain[0]);
-            for (int i = 1; i < spike.nChannels; i++)
-                g_var.append(spike.gain[i]);
-            c_obj->setProperty("gain", g_var);
-            var t_var = var(spike.threshold[0]);
-            for (int i = 1; i < spike.nChannels; i++)
-                t_var.append(spike.threshold[i]);
-            c_obj->setProperty("threshold", t_var);*/
-//#endif
+            //std::cout << "Spiking timestamp: " << spike->getTimestamp() << std::endl;
+
             obj->setProperty("spike", var(c_obj));
             var json (obj);
             String s = JSON::toString(json);
@@ -472,7 +456,6 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
 
             zmq_msg_t message;
             zmq_msg_init_size(&message, sizeof(float) * nChannels * nSamples);
-            // getdatapointer???
             memcpy(zmq_msg_data(&message), spike->getDataPointer(), sizeof(float) * nChannels * nSamples);
             size = zmq_msg_send(&message, socket, 0);
             jassert(size != -1);
@@ -480,6 +463,7 @@ int ZmqInterface::sendSpikeEvent(const SpikeChannel* spikeInfo, const MidiMessag
             
         }
     }
+
     return 0;
 }
 
@@ -670,7 +654,8 @@ void ZmqInterface::handleEvent(const EventChannel* eventInfo, const MidiMessage&
 
 void ZmqInterface::handleSpike(const SpikeChannel* spikeInfo, const MidiMessage& event, int samplePosition)
 {
-    std::cout << "spike" << std::endl;
+    //std::cout << "spike" << std::endl;
+    //std::cout << spikeInfo->getChannelDataSize() << std::endl;
     sendSpikeEvent(spikeInfo, event);
 }
 
@@ -776,8 +761,9 @@ void ZmqInterface::process(AudioSampleBuffer& buffer)
 
     checkForEvents(true); // see if we got any TTL events
 
-    // current timestamp is at the end of the buffer; we want to send the timestamp of the first sample instead
-    uint64_t firstTs = getTimestamp(0) - getNumSamples(0);
+    // Time stamp is at the beginning of the buffer
+    uint64_t firstTs = getTimestamp(0);
+
 
     float sampleRate;
 
