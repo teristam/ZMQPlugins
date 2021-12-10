@@ -145,7 +145,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZmqInterfaceEditorListBox)
 };
 
-ZmqInterfaceEditor::ZmqInterfaceEditor(GenericProcessor *parentNode, bool useDefaultParameters): GenericEditor(parentNode, useDefaultParameters)
+ZmqInterfaceEditor::ZmqInterfaceEditor(GenericProcessor *parentNode, bool useDefaultParameters=true): GenericEditor(parentNode, useDefaultParameters)
 {
     ZmqProcessor = (ZmqInterface *)parentNode;
     listBox = new ZmqInterfaceEditorListBox(String("no app connected"), this);

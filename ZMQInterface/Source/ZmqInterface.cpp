@@ -582,14 +582,6 @@ template<typename T> int ZmqInterface::sendParam(String name, T value)
 }
 
 
-AudioProcessorEditor* ZmqInterface::createEditor()
-{
-    
-    //        std::cout << "in PythonEditor::createEditor()" << std::endl;
-    editor = new ZmqInterfaceEditor(this, true);
-    return editor;
-}
-
 bool ZmqInterface::isReady()
 {
     return true;

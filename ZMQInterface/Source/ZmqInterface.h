@@ -93,9 +93,7 @@ public:
      this method while data acquisition is active. If they are modified in any
      other way, the application will crash.  */
     void setParameter(int parameterIndex, float newValue);
-    
-    AudioProcessorEditor* createEditor();
-    
+        
     bool hasEditor() const
     {
         return true;
